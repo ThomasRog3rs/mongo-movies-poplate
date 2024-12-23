@@ -4,6 +4,7 @@
   "description": "Script to populate mongo db with movies",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/ThomasRog3rs/mongo-movies-poplate/issues"
   },
-  "homepage": "https://github.com/ThomasRog3rs/mongo-movies-poplate#readme"
+  "homepage": "https://github.com/ThomasRog3rs/mongo-movies-poplate#readme",
+  "dependencies": {
+    "mongoose": "^8.9.2",
+    "mongoose-sequence": "^6.0.1"
+  }
 }
