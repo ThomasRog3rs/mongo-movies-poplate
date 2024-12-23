@@ -10,6 +10,9 @@ mongoose.connect(mongo_uri)
 const movieSchema = new mongoose.Schema({
     title: { type: String, required: true },
     releaseYear: { type: Number, required: true },
+    rated: { type: String, required: false },
+    actors: { type: String, requred: true },
+    plot: {type: String, requred: false},
     director: { type: String, required: true },
     stars: {
         type: Number,
@@ -17,7 +20,7 @@ const movieSchema = new mongoose.Schema({
         min: 1,
         max: 5, 
     },
-    review: { type: String, required: false },
+    posterUrl: { type: String, required: false },
 });
 
 movieSchema.plugin(AutoIncrement, { inc_field: 'id' });
@@ -90,21 +93,28 @@ const getMovieDetails = async (movieNames) => {
         // console.log(firstMovie);
         
         const movieDetails = await fetch(`https://www.omdbapi.com/?i=${firstMovie.imdbID}&apikey=c57fa46a`);
-        console.log(await movieDetails.json());
+        const movieData = await movieDetails.json();
+        console.log(movieData)
+
+        //calc rating
+        const imdbRaiting = Number(movieData.imdbRating);
+        console.log(movieData.imdbRating);
+
+        const actualRaiting = Math.round(imdbRaiting / 2);
+        
+        const newMovie = new Movie({
+            title: movieData.Title,
+            releaseYear: movieData.Year,
+            rated: movieData.Rated,
+            actors: movieData.Actors,
+            plot: movieData.Plot,
+            director: movieData.Director,
+            stars: actualRaiting,
+            posterUrl: movieData.Poster
+        });
+
+        newMovie.save();
     });
 }
 
 getMovieDetails(movieNames);
-
-// const newTestMovie = new Movie({
-//     title: "TEST MOVIE",
-//     releaseYear: 1999,
-//     director: "John Doe",
-//     stars: 3,
-//     review: "lorem ipsum"
-// });
-
-// newTestMovie.save();
-
-// console.log("Saving...")
-// console.log(newTestMovie);
