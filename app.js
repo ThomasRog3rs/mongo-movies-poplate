@@ -26,66 +26,85 @@ const Movie = mongoose.model('Movie', movieSchema);
 
 const movieNames = [
   "The Shawshank Redemption",
-  "The Godfather",
-  "Pulp Fiction",
-  "The Dark Knight",
-  "Fight Club",
-  "Inception",
-  "Goodfellas",
-  "The Matrix",
-  "Forrest Gump",
-  "The Silence of the Lambs",
-  "Saving Private Ryan",
-  "Jurassic Park",
-  "Titanic",
-  "The Lion King",
-  "Back to the Future",
-  "Die Hard",
-  "Raiders of the Lost Ark",
-  "The Terminator",
-  "Alien",
-  "Jaws",
-  "Schindler's List",
-  "The Lord of the Rings: The Fellowship of the Ring",
-  "The Lord of the Rings: The Two Towers",
-  "The Lord of the Rings: The Return of the King",
-  "The Green Mile",
-  "Gladiator",
-  "The Departed",
-  "The Usual Suspects",
-  "Interstellar",
-  "The Sixth Sense",
-  "Se7en",
-  "The Prestige",
-  "Avatar",
-  "Memento",
-  "Star Wars: Episode IV - A New Hope",
-  "Star Wars: Episode V - The Empire Strikes Back",
-  "Star Wars: Episode VI - Return of the Jedi",
-  "The Avengers",
-  "Iron Man",
-  "Black Panther",
-  "The Social Network",
-  "No Country for Old Men",
-  "The Wolf of Wall Street",
-  "Inglourious Basterds",
-  "Django Unchained",
-  "The Big Lebowski",
-  "Good Will Hunting",
-  "A Beautiful Mind",
-  "The Pianist",
-  "Braveheart"
+//   "The Godfather",
+//   "Pulp Fiction",
+//   "The Dark Knight",
+//   "Fight Club",
+//   "Inception",
+//   "Goodfellas",
+//   "The Matrix",
+//   "Forrest Gump",
+//   "The Silence of the Lambs",
+//   "Saving Private Ryan",
+//   "Jurassic Park",
+//   "Titanic",
+//   "The Lion King",
+//   "Back to the Future",
+//   "Die Hard",
+//   "Raiders of the Lost Ark",
+//   "The Terminator",
+//   "Alien",
+//   "Jaws",
+//   "Schindler's List",
+//   "The Lord of the Rings: The Fellowship of the Ring",
+//   "The Lord of the Rings: The Two Towers",
+//   "The Lord of the Rings: The Return of the King",
+//   "The Green Mile",
+//   "Gladiator",
+//   "The Departed",
+//   "The Usual Suspects",
+//   "Interstellar",
+//   "The Sixth Sense",
+//   "Se7en",
+//   "The Prestige",
+//   "Avatar",
+//   "Memento",
+//   "Star Wars: Episode IV - A New Hope",
+//   "Star Wars: Episode V - The Empire Strikes Back",
+//   "Star Wars: Episode VI - Return of the Jedi",
+//   "The Avengers",
+//   "Iron Man",
+//   "Black Panther",
+//   "The Social Network",
+//   "No Country for Old Men",
+//   "The Wolf of Wall Street",
+//   "Inglourious Basterds",
+//   "Django Unchained",
+//   "The Big Lebowski",
+//   "Good Will Hunting",
+//   "A Beautiful Mind",
+//   "The Pianist",
+//   "Braveheart"
 ];
 
-const newTestMovie = new Movie({
-    title: "TEST MOVIE",
-    releaseYear: 1999,
-    director: "John Doe",
-    stars: 3,
-    review: "lorem ipsum"
-});
+const getMovieDetails = async (movieNames) => {
+    movieNames.forEach(async (movieName) => {
+        // console.log(movieName)
+        const movieSearchResponse = await fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=c57fa46a`);
+        console.log(movieSearchResponse.ok);
+        if (!movieSearchResponse.ok) return;
 
-newTestMovie.save();
+        const movieSearch = await movieSearchResponse.json();
+        // console.log(movieSearch);
+        const firstMovie = movieSearch.Search[0];
+        // console.log(firstMovie);
+        
+        const movieDetails = await fetch(`https://www.omdbapi.com/?i=${firstMovie.imdbID}&apikey=c57fa46a`);
+        console.log(await movieDetails.json());
+    });
+}
 
-console.log("Saving...")
-console.log(newTestMovie);
+getMovieDetails(movieNames);
+
+// const newTestMovie = new Movie({
+//     title: "TEST MOVIE",
+//     releaseYear: 1999,
+//     director: "John Doe",
+//     stars: 3,
+//     review: "lorem ipsum"
+// });
+
+// newTestMovie.save();
+
+// console.log("Saving...")
+// console.log(newTestMovie);
