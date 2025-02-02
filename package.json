@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ThomasRog3rs/mongo-movies-poplate#readme",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "mongoose": "^8.9.2",
     "mongoose-sequence": "^6.0.1"
   }

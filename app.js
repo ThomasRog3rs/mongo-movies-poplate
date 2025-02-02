@@ -1,7 +1,9 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-const mongo_uri = "mongodb://localhost:27017/moviesdb";
+const mongo_uri = process.env.MONGO_URI;
 
 const movieSchema = new mongoose.Schema({
     title: { type: String, required: true, unique: true },
@@ -76,10 +78,23 @@ const movieNames = [
   "Braveheart"
 ];
 
+async function connectToDatabase() {
+    try {
+        const connect = await mongoose.connect(mongo_uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB Connected');
+        return connect;
+    } catch (err) {
+        console.error("MongoDB not Connected: " + err);
+        process.exit(1); // Exit the app if the database connection fails
+    }
+}
+
 const getMovieDetails = async (movieNames) => {
-    await mongoose.connect(mongo_uri)
-        .then(() => console.log('MongoDB Connected'))
-        .catch(err => console.log("MongoDB not Connected: " + err));
+    const connect = await connectToDatabase();
+    if(!connect) return;
 
     console.log("Adding Movies...");
     movieNames.forEach(async (movieName) => {
